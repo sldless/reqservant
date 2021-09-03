@@ -12,7 +12,11 @@ export class client extends Client {
 
   constructor(keys: { token: string; mongoose: string }) {
     super({
-      intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS],
+      intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MEMBERS,
+        Intents.FLAGS.GUILD_MESSAGES,
+      ],
       presence: {
         activities: [{ name: "the Mario Land Mod", type: "PLAYING" }],
         status: "dnd",

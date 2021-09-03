@@ -18,16 +18,16 @@ module.exports = {
       `Oh quick, order something because dinner's on **${member.user.username}**!`,
       `It's-a-**${member.user.username}**!`,
       `**${member.user.username}** echoes their presence in this server.`,
-      `${member}, welcome to **${guild.name}**! I mean, everyone needs to be greeted someway or another.`,
+      `${member.user.username}, welcome to **${guild.name}**! I mean, everyone needs to be greeted someway or another.`,
     ];
 
     const holaEmbed = new MessageEmbed()
       .setAuthor(
         "Member Joined!",
-        "https://cdn.discordapp.com/emojis/844614109160538142.png?v=1"
+        "https://cdn.discordapp.com/emojis/882070170607185990.png?v=1"
       )
       .setDescription(randomItem(messages))
-      .setFooter(`• ${guild.memberCount} members exist here!`)
+      .setFooter(`${guild.memberCount} members exist here!`)
       .setTimestamp()
       .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
       .setColor("#7DEB58");

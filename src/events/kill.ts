@@ -13,18 +13,18 @@ module.exports = {
     const channel = guild.channels.cache.get("876971753144979486");
 
     const messages = [
-      `Welp, ${member.user.username} is gone...`,
-      `There goes another ~~victim~~ kind soul who's name was ${member.user.username}...`,
-      `The food is getting cold and we are all full, and ${member.user.username} was our only hope!`,
-      `*Fwomp* ${member.user.username} ran away because of uhhh... reasons.`,
-      `sudo rm -rf /${member.user.username}`,
-      `${member} left ${guild.name} :(, but all good things must come to an end.`,
+      `Welp, **${member.user.username}** is gone...`,
+      `There goes another ~~victim~~ kind soul who's name was **${member.user.username}**...`,
+      `The food is getting cold and we are all full, and **${member.user.username}** was our only hope!`,
+      `*Fwomp* **${member.user.username}** ran away because of uhhh... reasons.`,
+      `sudo rm -rf /**${member.user.username}**`,
+      `**${member.user.username}** left **${guild.name}** :(, but all good things must come to an end.`,
     ];
 
     const gbyeEmbed = new MessageEmbed()
       .setAuthor(
         "Member left :(",
-        "https://cdn.discordapp.com/emojis/844614108989227079.png?v=1"
+        "https://cdn.discordapp.com/emojis/882070263943004180.png?v=1"
       )
       .setDescription(randomItem(messages))
       .setFooter(`${guild.memberCount} members remain...`)
