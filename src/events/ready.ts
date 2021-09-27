@@ -1,4 +1,5 @@
 import { manager } from "../manager";
+import { user } from "../database/user";
 
 module.exports = {
   name: "ready",
@@ -18,6 +19,6 @@ module.exports = {
       await guild.commands.set(data);
     });
 
-    manager.log("Successfully connected to Discord", "success");
+    manager.log("Connected to Discord", "success");
   },
 };

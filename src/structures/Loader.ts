@@ -12,23 +12,47 @@ export class Loader {
   async database(url: string) {
     await mongoose.connect(url);
 
-    this.client.log(`Successfully connected to MongoDB at ${url}`, "success");
+    this.client.log(`Connected to MongoDB`, "success");
   }
 
   async commands() {
+    this.client.log(
+      `Attempting to load ${chalk.bold(
+        readdirSync("./src/commands").length
+      )} commands...`,
+      "wait"
+    );
+
+    let cmd: number = 0;
+
     for (const file of readdirSync("./src/commands").filter((file) =>
       file.endsWith(".ts")
     )) {
       const command = require(`../commands/${file.slice(0, -3)}`);
 
       this.client.commands.set(command.name, command);
+
+      try {
+        require(`../commands/${file.slice(0, -3)}`);
+        this.client.log(
+          `${chalk.hex("#E2678A")(command.name)} loaded`,
+          "success"
+        );
+        cmd++;
+      } catch (e) {
+        this.client.log(
+          `${chalk.hex("#E2678A")(command.name)} failed\n   ${e}`,
+          "error"
+        );
+        cmd--;
+      }
     }
 
     this.client.log(
-      `Successfully loaded ${chalk.bold(
+      `Loaded ${chalk.bold(cmd)}/${chalk.bold(
         readdirSync("./src/commands").length
       )} commands`,
-      "success"
+      "wait"
     );
   }
 
@@ -47,15 +71,7 @@ export class Loader {
           event.execute(...args)
         );
       }
-
       this.client.events.set(event.name, event);
     }
-
-    this.client.log(
-      `Successfully loaded ${chalk.bold(
-        readdirSync("./src/events").length
-      )} events`,
-      "success"
-    );
   }
 }

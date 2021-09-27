@@ -1,68 +1,26 @@
 import * as chalk from "chalk";
-import * as dayjs from "dayjs";
-
-const color = "#1a242c";
 
 export function log(data: string, type = "log") {
-  const timeFormat = `[ ${chalk
-    .hex("#6DF3B9")
-    .bold(dayjs().format("MM/DD/YY"))} ]`;
-
   switch (type) {
     case "log":
-      console.log(`${timeFormat} ${data}`);
+      console.log(`${data}`);
       break;
     case "warn":
-      console.warn(
-        `${timeFormat} ${chalk
-          .bgHex("#EC9513")
-          .hex(color)
-          .bold(" WARN ")} ${data}`
-      );
+      console.warn(`${chalk.hex("#EC9513")("⚠")} ${data}`);
       break;
     case "error":
-      console.error(
-        `${timeFormat} ${chalk
-          .bgHex("#ce3b3b")
-          .hex(color)
-          .bold(" ERROR ")} ${data}`
-      );
+      console.error(`${chalk.hex("#ce3b3b")("✘")} ${data}`);
       break;
     case "success":
-      console.log(
-        `${timeFormat} ${chalk
-          .bgHex("#3bceac")
-          .hex(color)
-          .bold(" SUCCESS ")} ${data}`
-      );
+      console.log(`${chalk.hex("#3bceac")("✓")} ${data}`);
+      break;
+    case "wait":
+      console.log(`${chalk.hex("#866BAE")("⦿")} ${data}`);
   }
 }
 
-export function customLog(
-  prefixColor: string,
-  prefix: string,
-  data: string,
-  time: boolean = true
-) {
-  const timeFormat = `[ ${chalk
-    .hex("#6DF3B9")
-    .bold(dayjs().format("MM/DD/YY"))} ]`;
-
+export function customLog(prefixColor: string, prefix: string, data: string) {
   prefixColor.replace("#", "") && prefixColor.replace("0x", "");
 
-  if (time) {
-    console.log(
-      `${timeFormat} ${chalk
-        .bgHex(prefixColor)
-        .hex(color)
-        .bold(` ${prefix.toUpperCase()} `)} ${data}`
-    );
-  } else {
-    console.log(
-      `${chalk
-        .bgHex(prefixColor)
-        .hex(color)
-        .bold(` ${prefix.toUpperCase()} `)} ${data}`
-    );
-  }
+  console.log(`${chalk.hex(prefixColor)(`${prefix.toLowerCase()}`)} ${data}`);
 }
