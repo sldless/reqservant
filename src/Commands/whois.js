@@ -35,7 +35,7 @@ module.exports = {
       .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
       .addFields(
         {
-          name: `Join Stats ( click to view more info )`,
+          name: `Join Stats`,
           value: `> **Joined**: **<t:${Math.floor(
             member.joinedTimestamp / 1000
           )}:R>**\n> **Created**: **<t:${Math.floor(
