@@ -1,6 +1,6 @@
-import * as chalk from "chalk";
+const chalk = require("chalk")
 
-export function log(data: string, type = "log") {
+module.exports = function log(data, type = "log") {
   switch (type) {
     case "log":
       console.log(`${data}`);
@@ -16,11 +16,8 @@ export function log(data: string, type = "log") {
       break;
     case "wait":
       console.log(`${chalk.hex("#866BAE")("⦿")} ${data}`);
+      break;
+    case "sub":
+      console.log(`${chalk.hex("#3b9bce")("○")} ${data}`)
   }
-}
-
-export function customLog(prefixColor: string, prefix: string, data: string) {
-  prefixColor.replace("#", "") && prefixColor.replace("0x", "");
-
-  console.log(`${chalk.hex(prefixColor)(`${prefix.toLowerCase()}`)} ${data}`);
 }
