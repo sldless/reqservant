@@ -32,9 +32,6 @@ module.exports = {
       log(error, "error")
     }
 
-    const onlineWebhook = new WebhookClient({ url: "https://canary.discord.com/api/webhooks/898031843713118229/_MWWgP6yLWhj9Zb8p6vXYx2lirtW46tt_cyNUVU1H2eMxOqYvYdE3O_FaBKN4b97zsgz" })
-    await onlineWebhook.send({ content: `<:plus:882070170607185990> \`Status: Online\` <t:${Math.floor(Date.now() / 1000)}:R>` })
-
     log("Connected to Discord", "success")
   }
 }

@@ -1,4 +1,4 @@
-const { WebhookClient } = require("discord.js")
+const { WebhookClient, MessageEmbed } = require("discord.js")
 
 module.exports = {
   name: "interactionCreate",
@@ -10,7 +10,7 @@ module.exports = {
     if (!command) return;
 
     try {
-      await command.run(interaction);
+      await command.run(interaction, MessageEmbed);
     } catch (error) {
       const errorWebhook = new WebhookClient({ url: "https://canary.discord.com/api/webhooks/898019926663655424/g2H-loX32vYWXp4tz-ILZMA8l4IDPEhaHST3zIBvOgRqzfKqTgzlhYOlotRb08O0NtK7" })
 
