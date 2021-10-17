@@ -4,6 +4,16 @@ const { token, botId, guildId } = require('../config.json');
 const { WebhookClient } = require("discord.js")
 const fs = require('fs');
 
+const snoowrap = require('snoowrap');
+
+const r = new snoowrap({
+  userAgent: 'userAgent string',
+  clientId: 'YCk6rLfIMMY6R3llJyXeQA',
+  clientSecret: 'yYA-ZlctelGQDEwXMxOWQ8w81FiyAA',
+  username: 'JustReqDummyAccount',
+  password: 'BappyLikesAnimetm'
+});
+
 module.exports = {
   name: "ready",
   once: true,
@@ -18,15 +28,15 @@ module.exports = {
     }
 
     const rest = new REST({ version: '9' }).setToken(token);
-    
+
     try {
       log('Starting to reload commands', "wait");
-  
+
       await rest.put(
         Routes.applicationGuildCommands(botId, guildId),
         { body: botCommands },
       );
-  
+
       log('Successfully reloaded commands', "wait");
     } catch (error) {
       log(error, "error")
