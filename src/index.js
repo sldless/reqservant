@@ -17,7 +17,7 @@ globalThis.client = new Client({
   presence: {
     activities: [
       {
-        name: "the Mario Land mod",
+        name: `Loading...`,
         type: "PLAYING",
       },
     ],

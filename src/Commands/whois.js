@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -9,7 +10,7 @@ module.exports = {
         .setName("member")
         .setDescription("I kind of need someone to get info from...");
     }),
-  async run(interaction, MessageEmbed) {
+  async run(interaction) {
     let user = interaction.options.getUser("member");
 
     if (!user) {
