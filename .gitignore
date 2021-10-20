@@ -2,4 +2,7 @@ node_modules
 src/config.json
 package.json
 package-lock.json
-.vscode
+dicord.xml
+modules.cml
+resort-manager.iml
+vcs.xml
