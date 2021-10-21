@@ -34,9 +34,6 @@ module.exports = {
 
     log("Connected to Discord", "success");
 
-    client.user.setActivity({
-      name: `with ${commands.size === 1 ? `${commands.size} command` : `${commands.size} commands`}`,
-      type: "PLAYING",
-    });
+    client.user.setPresence({ activities: [{ name: `with ${commands.size === 1 ? `${commands.size} command` : `${commands.size} commands`}`, type: "PLAYING" }], status: "online" })
   },
 };

@@ -3,3 +3,4 @@ src/config.json
 package.json
 package-lock.json
 .idea
+src/Events/interactionCreate.js
