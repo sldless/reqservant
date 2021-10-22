@@ -57,6 +57,13 @@ module.exports = {
 				.addStringOption( ( d ) => {
 					return d.setName( "content" ).setDescription( "New content?" );
 				} );
+		} ).addSubcommand( ( sub ) => {
+			return sub
+				.setName( "view" )
+				.setDescription( "Shows a tag... so cool" )
+				.addStringOption( ( t ) => {
+					return t.setName( "tag" ).setDescription( "What's the tag?" );
+				} );
 		} ),
 
 	async run( interaction ) {
@@ -158,13 +165,6 @@ module.exports = {
 				break;
 
 			case "info":
-				if ( !interaction.member.roles.cache.has( "887429367544815696" ) ) {
-					return interaction.reply( {
-						content: "You need to be a staff member to use this!",
-						ephemeral: true
-					} );
-				}
-
 				const tagThingy = interaction.options.getString( "tag" );
 
 				let documen2;
@@ -503,6 +503,303 @@ module.exports = {
 						}
 					}
 				);
+
+				break;
+			}
+
+			case "edit": {
+				if ( !interaction.member.roles.cache.has( "887429367544815696" ) ) {
+					return interaction.reply( {
+						content: "You need to be a staff member to use this!",
+						ephemeral: true
+					} );
+				}
+
+				const tagThingy = interaction.options.getString( "tag" );
+				const title = interaction.options.getString( "title" );
+				const content = interaction.options.getString( "content" );
+
+				if ( tagThingy && content && title && await tag.findOne( { name: tagThingy.toLowerCase() } ) ) {
+
+					const leTags = await tag.findOne( { name: tagThingy.toLowerCase() } );
+
+					leTags.content = content;
+					leTags.name = title.toLowerCase().split()[ 0 ].toLowerCase();
+
+					await leTags.save();
+
+					return interaction.reply( { content: "Tag updated", ephemeral: true } );
+				} else if ( tagThingy && title && await tag.findOne( { name: tagThingy.toLowerCase() } ) ) {
+
+					const thingy = await tag.findOne( { name: tagThingy.toLowerCase() } );
+
+					thingy.name = title.toLowerCase().split()[ 0 ].toLowerCase();
+
+					await thingy.save();
+
+					return interaction.reply( { content: "Tag updated", ephemeral: true } );
+				} else if ( tagThingy && content && await tag.findOne( { name: tagThingy.toLowerCase() } ) ) {
+
+					const another = await tag.findOne( { name: tagThingy.toLowerCase() } );
+
+					another.content = content;
+
+					await another.save();
+
+					return interaction.reply( { content: "Tag updated", ephemeral: true } );
+				}
+
+				const tags = await tag.find();
+
+				const errorEmbedFour = new MessageEmbed()
+					.setAuthor( "Specified Tag doesn't exist." )
+					.setDescription(
+						`The tag doesn't exist, but these ones do.\n\`\`\`\n${
+							tags.length > 0 ? tags.slice( 0, 10 ).map( ( t ) => t.name ).join( ", " ) : "No tags yet"
+						}\`\`\``
+					)
+					.setColor( "#3498DB" );
+
+				const errorActionRowFour = new MessageActionRow().addComponents(
+					new MessageButton()
+						.setCustomId( "nopersersers" )
+						.setLabel( "✘" )
+						.setStyle( "DANGER" ),
+					new MessageButton()
+						.setCustomId( "behindwardss" )
+						.setLabel( "◀" )
+						.setStyle( "PRIMARY" ),
+					new MessageButton()
+						.setCustomId( "frontwardss" )
+						.setLabel( "►" )
+						.setStyle( "PRIMARY" )
+				);
+
+				if ( !tags.length ) {
+					errorActionRowFour.components.forEach( ( c ) => c.disabled = true );
+					errorActionRowFour.components[ 0 ].disabled = false;
+				}
+
+				const fancyEmbed = new MessageEmbed();
+
+				const fancyRow = new MessageActionRow().addComponents(
+					new MessageButton()
+						.setCustomId( "select" )
+						.setLabel( "✓" )
+						.setStyle( "SUCCESS" ),
+					new MessageButton()
+						.setCustomId( "behindwardss" )
+						.setLabel( "◀" )
+						.setStyle( "PRIMARY" ),
+					new MessageButton()
+						.setCustomId( "frontwardss" )
+						.setLabel( "►" )
+						.setStyle( "PRIMARY" )
+				);
+
+				const fancyRowTwo = new MessageActionRow().addComponents(
+					new MessageButton()
+						.setCustomId( "name" )
+						.setLabel( "Name" )
+						.setStyle( "PRIMARY" ),
+					new MessageButton()
+						.setCustomId( "content" )
+						.setLabel( "Content" )
+						.setStyle( "PRIMARY" ),
+					new MessageButton()
+						.setCustomId( "both" )
+						.setLabel( "Both" )
+						.setStyle( "PRIMARY" )
+				);
+
+				if ( !tagThingy || tagThingy && !tag.findOne( { name: tagThingy.toLowerCase() } ) ) {
+					interaction.reply( { embeds: [ errorEmbedFour ], components: [ errorActionRowFour ] } );
+
+					const input = new InteractionCollector( interaction.client, {
+						channel: interaction.channelId,
+						componentType: "BUTTON",
+						message: interaction.fetchReply().id
+					} );
+
+					let te = 0;
+
+					input.on( "collect", ( c ) => {
+							if ( c.user.id !== interaction.user.id ) {
+								c.reply( { content: "You can't do that!" } );
+							}
+
+							const filter = m => m.author.id === interaction.user.id;
+
+							if ( c.customId === "nopersersers" ) {
+								interaction.deleteReply();
+							} else if ( c.customId === "frontwardss" ) {
+								if ( te === tags.length - 1 ) te = 0;
+								else te++;
+
+								c.deferUpdate();
+
+								interaction.editReply( {
+									embeds: [ fancyEmbed.setAuthor( `Edit ${ tags[ te ].name }?` ).setColor( "#F1C40F" ) ],
+									components: [ fancyRow ]
+								} );
+
+							} else if ( c.customId === "behindwardss" ) {
+								if ( te === 0 ) te = tags.length - 1;
+								else te--;
+
+								c.deferUpdate();
+
+								interaction.editReply( {
+									embeds: [ fancyEmbed.setAuthor( `Edit ${ tags[ te ].name }?` ).setColor( "#F1C40F" ) ],
+									components: [ fancyRow ]
+								} );
+							} else if ( c.customId === "select" ) {
+								c.deferUpdate();
+
+								interaction.editReply( {
+									embeds: [ fancyEmbed.setAuthor( tags[ te ].name ).setDescription( "Pick out of three parameters\n\n`Name` - `Content` - `Both`" ).setColor( "#F1C40F" ) ],
+									components: [ fancyRowTwo ]
+								} );
+							} else if ( c.customId === "name" ) {
+								interaction.editReply( {
+									embeds: [ fancyEmbed.setAuthor( tags[ te ].name ).setDescription( "Now specify a name" ).setColor( "#F1C40F" ) ],
+									components: []
+								} );
+
+								let tries = 3;
+								const collector = interaction.channel.createMessageCollector( { filter, time: 15000, max: 3 } );
+
+								collector.on( "collect", async ( c ) => {
+									const content = c.content.split();
+
+									if ( content[ 1 ] ) {
+										tries--;
+										c.reply( { content: `You have \`${ tries }\` tries left`, ephemeral: true } );
+										c.delete();
+										return;
+									}
+
+									const doc = await tag.findOneAndUpdate( { name: tags[ te ].name }, { name: c.content.split()[ 0 ] } );
+									await doc.save();
+
+									interaction.editReply( {
+										embeds: [ fancyEmbed.setAuthor( c.content.split()[ 0 ] ).setDescription( `\`${ tags[ te ].name }\` was updated to \`${ c.content.split()[ 0 ] }\`` ).setColor( "#F1C40F" ) ],
+										components: []
+									} );
+
+									c.delete();
+
+									collector.stop();
+								} );
+							} else if ( c.customId === "content" ) {
+								interaction.editReply( {
+									embeds: [ fancyEmbed.setAuthor( tags[ te ].name ).setDescription( `The current content is \`${ tags[ te ].content }\`\n\nNow I need the new content` ).setColor( "#F1C40F" ) ],
+									components: []
+								} );
+
+								const collector = interaction.channel.createMessageCollector( { filter, time: 15000, max: 3 } );
+
+								collector.on( "collect", async ( c ) => {
+									await tag.findOneAndUpdate( { name: tags[ te ].name }, { content: c.content } );
+
+									interaction.editReply( {
+										embeds: [ fancyEmbed.setAuthor( tags[ te ].name ).setDescription( `\`${ tags[ te ].content }\` was updated to \`${ c.content }\`` ).setColor( "#F1C40F" ) ],
+										components: []
+									} );
+
+									c.delete();
+
+									collector.stop();
+								} );
+							} else if ( c.customId === "both" ) {
+								interaction.editReply( {
+									embeds: [ fancyEmbed.setAuthor( tags[ te ].name ).setDescription( `The current name is \`${ tags[ te ].name }\`\n\nNow I need a new one.` ).setColor( "#F1C40F" ) ],
+									components: []
+								} );
+
+								const collector = interaction.channel.createMessageCollector( { filter, time: 15000, max: 3 } );
+
+								let triesAgain = 3;
+
+								collector.on( "collect", async ( c ) => {
+										const content = c.content.split();
+
+										if ( content[ 1 ] ) {
+											triesAgain--;
+											await c.reply( { content: `You have \`${ triesAgain }\` tries left`, ephemeral: true } );
+											await c.delete();
+											return;
+										}
+
+										await tag.findOneAndUpdate( { name: tags[ te ].name }, { name: c.content.split()[ 0 ] } );
+
+										collector.stop();
+
+										const name = c.content.split()[ 0 ];
+
+										await interaction.editReply( {
+											embeds: [ fancyEmbed.setAuthor( tags[ te ].name ).setDescription( `> Name: \`${ c.content.split()[ 0 ] }\`\n\nThe current content is \`${ tags[ te ].content }\`\n\nNow I need the new content` ).setColor( "#F1C40F" ) ],
+											components: []
+										} );
+
+										await c.delete();
+
+										const collector2 = interaction.channel.createMessageCollector( { filter, time: 15000, max: 3 } );
+
+										collector2.on( "collect", async ( c ) => {
+											await tag.findOneAndUpdate( { name: name }, { content: c.content } );
+
+											await interaction.editReply( {
+												embeds: [ fancyEmbed.setAuthor( name ).setDescription( `\`${ name }\` was successfully updated` ).setColor( "#F1C40F" ) ],
+												components: []
+											} );
+
+											await c.delete();
+
+											collector2.stop();
+										} );
+									}
+								);
+							}
+						}
+					);
+				}
+				break;
+			}
+
+			case "view": {
+				const tagThingy = interaction.options.getString( "tag" );
+
+				if ( tagThingy && !await tag.findOne( { name: tagThingy.toLowerCase() } ) ) {
+					const tags = await tag.find();
+
+					interaction.reply( {
+						embeds: [ new MessageEmbed()
+							.setAuthor( "Specified Tag doesn't exist." )
+							.setDescription(
+								`The tag doesn't exist, but these ones do.\n\`\`\`\n${
+									tags.length > 0 ? tags.slice( 0, 10 ).map( ( t ) => t.name ).join( ", " ) : "No tags yet"
+								}\`\`\``
+							)
+							.setColor( "#3498DB" ) ]
+					} );
+
+					return;
+				}
+
+				const doc = await tag.findOne( { name: tagThingy.toLowerCase() } );
+
+				interaction.reply( {
+					embeds: [ new MessageEmbed()
+						.setAuthor( doc.name )
+						.setDescription(
+							doc.content
+						)
+						.setColor( "#3498DB" ) ]
+				} );
+
+				doc.uses++;
+				await doc.save();
 			}
 		}
 	}
