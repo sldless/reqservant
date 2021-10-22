@@ -770,7 +770,7 @@ module.exports = {
 			case "view": {
 				const tagThingy = interaction.options.getString( "tag" );
 
-				if ( tagThingy && !await tag.findOne( { name: tagThingy.toLowerCase() } ) ) {
+				if ( !tagThingy || tagThingy && !tag.findOne( { name: tagThingy.toLowerCase() } ) ) {
 					const tags = await tag.find();
 
 					interaction.reply( {
