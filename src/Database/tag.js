@@ -1,6 +1,6 @@
 const { model, Schema } = require("mongoose")
 
-const document = new model("tags", new Schema({
+const tag_schema = new model("tags", new Schema({
   id: { type: String, required: true },
   name: { type: String, required: true },
   content: { type: String, required: true },
@@ -9,4 +9,4 @@ const document = new model("tags", new Schema({
   created: String,
 }))
 
-module.exports = document
+module.exports = tag_schema;
