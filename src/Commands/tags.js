@@ -179,7 +179,7 @@ module.exports = {
 					.setAuthor( "Specified Tag doesn't exist." )
 					.setDescription(
 						`The tag doesn't exist, but these ones do.\n\`\`\`\n${
-							tags.length > 0 ? tags.slice( 0, 10 ).map( ( t ) => t.name ).join( ", " ) : "No tags yet"
+							tags.length > 0 ? tags.slice( 0, 10 ).map( ( t ) => t.name ).join( ", " ) : "None do but, you can make one by using /tag create"
 						}\`\`\``
 					)
 					.setColor( "#3498DB" );
