@@ -17,7 +17,7 @@ module.exports = {
       await errorWebhook.send({ content: `||<@785713087167725578>|| \`${error}\` <t:${Math.floor(Date.now() / 1000)}:R>\n\`\`\`diff\n- Command: ${interaction.commandName}\n- Username: ${interaction.user.username}\n- Channel: ${interaction.channel.name}\`\`\`` })
 
       interaction.reply({
-        content: "I found an error, I will let the developer know.",
+        content: "I found an error, I will let my developer(s) know!",
         ephemeral: true,
       });
 
